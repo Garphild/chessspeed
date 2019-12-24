@@ -1,10 +1,12 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 import { hot } from 'react-hot-loader';
 import React from 'react';
 import './App.css';
 import Chessboard from 'chessboardjsx';
 import Chess from 'chess.js';
 
-import games from './assets/GoringGambit';
+// import games from './assets/GoringGambit';
+import games from './assets/300_kings_gambit_miniatures';
 
 const mygames = games.split(/\n\n\[/g).map((v) => (v[0] === '[' ? v : `[${v}`));
 
@@ -20,6 +22,7 @@ class App extends React.Component {
     headers: {},
     paused: false,
     movePause: 300,
+    pauseAfterGame: 5000,
   };
 
   constructor() {
@@ -113,6 +116,8 @@ class App extends React.Component {
   intervalFunction() {
     const {
       currentMove,
+      movePause,
+      pauseAfterGame,
     } = this.state;
     if (currentMove < this.gameMoves.length) {
       // console.log(currentMove, this.gameMoves[currentMove]);
@@ -121,7 +126,11 @@ class App extends React.Component {
         position: this.gameMoves[currentMove],
       });
     } else {
-      this.loadNextGame();
+      clearInterval(this.interval);
+      setTimeout(() => {
+        this.loadNextGame();
+        this.interval = setInterval(this.intervalFunction, movePause);
+      }, pauseAfterGame);
     }
   }
 
@@ -132,6 +141,7 @@ class App extends React.Component {
       headers,
       paused,
       movePause,
+      currentGame,
     } = this.state;
     const board = (
       <Chessboard
@@ -179,11 +189,9 @@ class App extends React.Component {
               <button type="button" className="quicklyButton" onClick={this.quickly} disabled={movePause <= 100}>Quickly</button>
             </div>
             <div className="currentSpeed">
-Pause between moves
+              Pause between moves
               <br />
-              {(movePause / 1000).toFixed(1)}
-              {' '}
-sec.
+              {(movePause / 1000).toFixed(1)} sec.
             </div>
           </div>
         </div>
@@ -191,6 +199,8 @@ sec.
           {board}
         </div>
         <div className="rightBoard">
+          Game {currentGame} from {mygames.length}
+          <hr />
         PLAYERS:
           <hr />
           <span className="color-identy black-border">&nbsp;</span>
