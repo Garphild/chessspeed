@@ -8,10 +8,10 @@ import Chess from 'chess.js';
 // import games from './assets/GoringGambit';
 // import games from './assets/300_kings_gambit_miniatures';
 
-const games = '';
+let games = '';
 
 // const mygames = games.split(/\n\n\[/g).map((v) => (v[0] === '[' ? v : `[${v}`));
-const mygames = games.split(/\n\n\[/g).map((v) => (v[0] === '[' ? v : `[${v}`));
+let mygames = [];
 
 class App extends React.Component {
   game = new Chess();
@@ -56,6 +56,23 @@ class App extends React.Component {
     if (prevState.currentGame !== currentGame) {
       this.loadGame();
     }
+  }
+
+  loadRemoteGames = (file) => {
+    let url = `http://${window.location.hostname}/collections/getFile/${file}`;
+    fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'include',
+    })
+      .then((resp) => resp.text())
+      .then((resp) => {
+        games = resp;
+        mygames = games.split(/\n\n\[/g).map((v) => (v[0] === '[' ? v : `[${v}`));
+      });
+    this.setState({
+      paused: false
+    })
   }
 
   pause = () => {
@@ -202,7 +219,7 @@ class App extends React.Component {
           </div>
           <ol>
             {/* eslint-disable-next-line react/no-array-index-key */}
-            {collectionsList.map((v, i) => <li key={i}>{v.name}</li>)}
+            {collectionsList.map((v, i) => <li key={i} onClick={() => this.loadRemoteGames(v.file)}>{v.name}</li>)}
           </ol>
           <div className="controls">
             <button type="button" className="pauseButton" onClick={() => (paused ? this.startAgain() : this.pause())}>{paused ? 'Go' : 'Pause'}</button>
