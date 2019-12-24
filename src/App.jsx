@@ -6,8 +6,11 @@ import Chessboard from 'chessboardjsx';
 import Chess from 'chess.js';
 
 // import games from './assets/GoringGambit';
-import games from './assets/300_kings_gambit_miniatures';
+// import games from './assets/300_kings_gambit_miniatures';
 
+const games = '';
+
+// const mygames = games.split(/\n\n\[/g).map((v) => (v[0] === '[' ? v : `[${v}`));
 const mygames = games.split(/\n\n\[/g).map((v) => (v[0] === '[' ? v : `[${v}`));
 
 class App extends React.Component {
@@ -23,6 +26,7 @@ class App extends React.Component {
     paused: false,
     movePause: 300,
     pauseAfterGame: 5000,
+    collectionsList: [],
   };
 
   constructor() {
@@ -32,6 +36,17 @@ class App extends React.Component {
 
   componentDidMount() {
     const { movePause } = this.state;
+    fetch(`http://${window.location.hostname}/collections`, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'include',
+    })
+      .then((resp) => resp.json())
+      .then((resp) => {
+        this.setState({
+          collectionsList: resp,
+        });
+      });
     this.interval = setInterval(this.intervalFunction, movePause);
     this.loadGame();
   }
@@ -87,21 +102,23 @@ class App extends React.Component {
   loadGame = () => {
     const { currentGame } = this.state;
     const pgn = mygames[currentGame];
-    this.game.clear();
-    this.game.load_pgn(pgn);
-    const moves = this.game.history();
-    const headers = this.game.header();
-    const start = headers.FEN;
-    this.game.clear();
-    // eslint-disable-next-line no-unneeded-ternary
-    this.game.load(start ? start : 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
-    this.gameMoves = moves.map((v) => {
-      this.game.move(v);
-      return this.game.fen();
-    });
-    this.setState({
-      headers,
-    });
+    if (pgn !== undefined) {
+      this.game.clear();
+      this.game.load_pgn(pgn);
+      const moves = this.game.history();
+      const headers = this.game.header();
+      const start = headers.FEN;
+      this.game.clear();
+      // eslint-disable-next-line no-unneeded-ternary
+      this.game.load(start ? start : 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+      this.gameMoves = moves.map((v) => {
+        this.game.move(v);
+        return this.game.fen();
+      });
+      this.setState({
+        headers,
+      });
+    }
   };
 
   loadNextGame = () => {
@@ -142,6 +159,7 @@ class App extends React.Component {
       paused,
       movePause,
       currentGame,
+      collectionsList,
     } = this.state;
     const board = (
       <Chessboard
@@ -182,6 +200,10 @@ class App extends React.Component {
             <span className="color-identy yellow-border">&nbsp;</span>
             <span className="description">Draw</span>
           </div>
+          <ol>
+            {/* eslint-disable-next-line react/no-array-index-key */}
+            {collectionsList.map((v, i) => <li key={i}>{v.name}</li>)}
+          </ol>
           <div className="controls">
             <button type="button" className="pauseButton" onClick={() => (paused ? this.startAgain() : this.pause())}>{paused ? 'Go' : 'Pause'}</button>
             <div className="buttonGroup">

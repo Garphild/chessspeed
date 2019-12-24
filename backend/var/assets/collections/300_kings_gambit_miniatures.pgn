@@ -1,4 +1,4 @@
-const games = `[Event "San Antonio"]
+[Event "San Antonio"]
 [Site "San Antonio"]
 [Date "1971.??.??"]
 [Round "?"]
@@ -4398,5 +4398,3 @@ Rg8 9. Ne1 Bh6 10. Bd3 Be6 11. Bxh7 Rh8 12. Qd3 Nc6 13. a3 Qh4 14. Bf5 O-O-O
 O-O O-O 9. Nc3 Bg4 10. Bxc6 bxc6 11. Qd3 Re8 12. Ne5 Bxe5 13. dxe5 Qb6+ 14. Kh1
 Rad8 15. Na4 Qa5 16. Qc3 Qxa4 17. exf6 Be2 18. Re1 Qe4 19. Bd2 f3 20. Kg1 Qg4
 0-1
-`;
-export default games;

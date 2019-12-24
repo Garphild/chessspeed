@@ -19,6 +19,21 @@ html, body {
   margin-top: 10px;
 }
 
+.leftBoard ol {
+  text-align: left;
+  /*margin-left: 0px;*/
+  padding-left: 15px;
+
+}
+
+.leftBoard ul
+{
+  list-style: none;
+  text-align: left;
+  margin-left: 0;
+  padding-left: 0;
+}
+
 .rightBoard {
   width: 100%;
   padding-right: 5px;

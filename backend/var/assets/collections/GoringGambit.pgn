@@ -1,4 +1,4 @@
-const games = `[Event "USA-01.Congress"]
+[Event "USA-01.Congress"]
 [Site "New York"]
 [Date "1857.??.??"]
 [Round "3"]
@@ -32160,6 +32160,3 @@ const games = `[Event "USA-01.Congress"]
 22.Kf1 Kb7 23.Ke2 Kb6 24.Rc3 Kb5 25.Rg3 g6 26.Rh3 h5 27.Rf3 Rd7 28.Rf4 c5
 29.h3 f5 30.Rf3 Kb4 31.h4 Rd4 32.g3 c4 33.bxc4 Rxc4 34.Kd2 Rd4+ 35.Kc2 Rc4+
 36.Kd2 Rd4+  1/2-1/2
-`;
-
-export default games;
