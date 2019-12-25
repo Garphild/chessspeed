@@ -59,7 +59,7 @@ class App extends React.Component {
   }
 
   loadRemoteGames = (file) => {
-    let url = `http://${window.location.hostname}/collections/getFile/${file}`;
+    const url = `://${window.location.hostname}/collections/getFile/${file}`;
     fetch(url, {
       method: 'GET',
       mode: 'cors',
@@ -71,9 +71,9 @@ class App extends React.Component {
         mygames = games.split(/\n\n\[/g).map((v) => (v[0] === '[' ? v : `[${v}`));
       });
     this.setState({
-      paused: false
-    })
-  }
+      paused: false,
+    });
+  };
 
   pause = () => {
     clearInterval(this.interval);
@@ -218,8 +218,12 @@ class App extends React.Component {
             <span className="description">Draw</span>
           </div>
           <ol>
-            {/* eslint-disable-next-line react/no-array-index-key */}
-            {collectionsList.map((v, i) => <li key={i} onClick={() => this.loadRemoteGames(v.file)}>{v.name}</li>)}
+            {collectionsList.map((v, i) => (
+              /* eslint-disable-next-line react/no-array-index-key */
+              <li key={i}>
+                <button type="button" onClick={() => this.loadRemoteGames(v.file)}>{v.name}</button>
+              </li>
+            ))}
           </ol>
           <div className="controls">
             <button type="button" className="pauseButton" onClick={() => (paused ? this.startAgain() : this.pause())}>{paused ? 'Go' : 'Pause'}</button>

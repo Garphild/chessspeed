@@ -24,9 +24,9 @@ return function (App $app) {
 //  });
 
     $app->get('/', function (Request $request, Response $response) {
-        $response->getBody()->write('Hello world 33!');
+        $response->getBody()->write(file_get_contents('../public_html/main/index.html'));
         return $response
-          ->withHeader('Content-Type', 'application/json')
+//          ->withHeader('Content-Type', 'application/json')
           ->withHeader('Access-Control-Allow-Origin', 'http://localhost:5000')
           ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
           ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');;
@@ -35,7 +35,11 @@ return function (App $app) {
     $app->get('/collections', function (Request $request, Response $response) {
 	    $c = file_get_contents("../var/assets/collections.json");
       $response->getBody()->write($c);
-      return $response;
+      return $response
+        ->withHeader('Content-Type', 'application/json')
+        ->withHeader('Access-Control-Allow-Origin', 'http://localhost:5000')
+        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     });
 
   $app->get('/collections/getFile/{fname}', function (Request $request, Response $response) {
